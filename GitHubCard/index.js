@@ -53,3 +53,71 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+// 1. GET REQUEST
+axios.get("https://api.github.com/users/soraiagm")
+  .then(response => {
+      console.log(response.data)
+      cards.appendChild(githubComponent(response.data))
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+  const cards = document.querySelector(".cards");
+
+  function githubComponent (data) {
+      
+      const card = document.createElement("div")
+      card.classList.add("card")
+      cards.appendChild(card);
+
+      const img = document.createElement("img")
+      card.appendChild(img)
+      img.src = data.avatar_url
+
+      const cardInfo = document.createElement("div")
+      cardInfo.classList.add("card-info")
+      card.appendChild(cardInfo)
+
+      const name = document.createElement("h3")
+      name.classList.add("name")
+      cardInfo.appendChild(name)
+      name.textContent = data.name
+
+      const userName = document.createElement("p")
+      userName.classList.add("username")
+      cardInfo.appendChild(userName)
+      userName.textContent = data.login
+
+      const userLocation = document.createElement("p")
+      cardInfo.appendChild(userLocation)
+      userLocation.textContent = `Location: ${data.location}`
+
+      const profile = document.createElement("p")
+      cardInfo.appendChild(profile)
+      profile.textContent = `Profile: ${data.html_url}`
+
+      const userFollowers = document.createElement("p")
+      cardInfo.appendChild(userFollowers)
+      userFollowers.textContent = `Followers: ${data.followers}`
+
+      const userFollowing = document.createElement("p")
+      cardInfo.appendChild(userFollowing)
+      userFollowing.textcontent = `Following: ${data.following}`
+
+      const bio = document.createElement("p")
+      cardInfo.appendChild(bio)
+      bio.textContent = `Bio: ${data.bio}`
+
+      return card
+  }
+      
+// 2. Followers added
+axios.get("https://api.github.com/users/soraiagm/followers")
+     .then(response => {
+       console.log(response);
+       response.data.forEach(item => {
+         cards.appendChild(githubComponent(item))
+       })
+     })
