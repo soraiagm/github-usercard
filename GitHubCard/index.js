@@ -23,8 +23,17 @@
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
+// GET REQUEST FOR INSTRUCTORS
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
 
-const followersArray = [];
+followersArray.forEach(item => {
+  axios.get(`https://api.github.com/users/${item}`)
+       .then(response => {
+         console.log(response.data);
+         cards.appendChild(githubComponent(response.data))
+       })
+       
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -54,7 +63,8 @@ const followersArray = [];
   bigknell
 */
 
-// 1. GET REQUEST
+
+// 1. GET REQUEST FOR MY GITHUB
 axios.get("https://api.github.com/users/soraiagm")
   .then(response => {
       console.log(response.data)
@@ -94,30 +104,43 @@ axios.get("https://api.github.com/users/soraiagm")
       cardInfo.appendChild(userLocation)
       userLocation.textContent = `Location: ${data.location}`
 
-      const profile = document.createElement("p")
-      cardInfo.appendChild(profile)
-      profile.textContent = `Profile: ${data.html_url}`
+      const profilePara = document.createElement("p")
+      const aHref = document.createElement("a")
+      
+      profilePara.textContent = `Profile: ${aHref}`
+      aHref.textContent = data.html_url
+      aHref.setAttribute('href', `${data.html_url}`)
+      aHref.href = data.html_url
+     
+      cardInfo.appendChild(profilePara)
+      profilePara.appendChild(aHref)
 
       const userFollowers = document.createElement("p")
       cardInfo.appendChild(userFollowers)
       userFollowers.textContent = `Followers: ${data.followers}`
 
-      const userFollowing = document.createElement("p")
+      const userFollowing = document.createElement("p");
+      userFollowing.textContent = `Following: ${data.following}`
       cardInfo.appendChild(userFollowing)
-      userFollowing.textcontent = `Following: ${data.following}`
-
+      
       const bio = document.createElement("p")
       cardInfo.appendChild(bio)
       bio.textContent = `Bio: ${data.bio}`
-
+      
       return card
   }
+
+  
       
-// 2. Followers added
-axios.get("https://api.github.com/users/soraiagm/followers")
-     .then(response => {
-       console.log(response);
-       response.data.forEach(item => {
-         cards.appendChild(githubComponent(item))
-       })
-     })
+
+
+
+
+
+// axios.get("https://api.github.com/users")
+//       .then(response => {
+//         console.log(response.data);
+//         response.data.forEach(item => {
+//           cards.appendChild(githubComponent(item))
+//         })
+//       })     
