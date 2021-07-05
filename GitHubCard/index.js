@@ -23,8 +23,17 @@
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
+// GET REQUEST FOR INSTRUCTORS
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
 
-const followersArray = [];
+followersArray.forEach(item => {
+  axios.get(`https://api.github.com/users/${item}`)
+       .then(response => {
+         console.log(response.data);
+         cards.appendChild(githubComponent(response.data))
+       })
+       
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +62,85 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+
+// 1. GET REQUEST FOR MY GITHUB
+axios.get("https://api.github.com/users/soraiagm")
+  .then(response => {
+      console.log(response.data)
+      cards.appendChild(githubComponent(response.data))
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+  const cards = document.querySelector(".cards");
+
+  function githubComponent (data) {
+      
+      const card = document.createElement("div")
+      card.classList.add("card")
+      cards.appendChild(card);
+
+      const img = document.createElement("img")
+      card.appendChild(img)
+      img.src = data.avatar_url
+
+      const cardInfo = document.createElement("div")
+      cardInfo.classList.add("card-info")
+      card.appendChild(cardInfo)
+
+      const name = document.createElement("h3")
+      name.classList.add("name")
+      cardInfo.appendChild(name)
+      name.textContent = data.name
+
+      const userName = document.createElement("p")
+      userName.classList.add("username")
+      cardInfo.appendChild(userName)
+      userName.textContent = data.login
+
+      const userLocation = document.createElement("p")
+      cardInfo.appendChild(userLocation)
+      userLocation.textContent = `Location: ${data.location}`
+
+      const profilePara = document.createElement("p")
+      const aHref = document.createElement("a")
+      
+      profilePara.textContent = `Profile: ${aHref}`
+      aHref.textContent = data.html_url
+      aHref.setAttribute('href', `${data.html_url}`)
+      aHref.href = data.html_url
+     
+      cardInfo.appendChild(profilePara)
+      profilePara.appendChild(aHref)
+
+      const userFollowers = document.createElement("p")
+      cardInfo.appendChild(userFollowers)
+      userFollowers.textContent = `Followers: ${data.followers}`
+
+      const userFollowing = document.createElement("p");
+      userFollowing.textContent = `Following: ${data.following}`
+      cardInfo.appendChild(userFollowing)
+      
+      const bio = document.createElement("p")
+      cardInfo.appendChild(bio)
+      bio.textContent = `Bio: ${data.bio}`
+      
+      return card
+  }
+
+  
+      
+
+
+
+
+
+// axios.get("https://api.github.com/users")
+//       .then(response => {
+//         console.log(response.data);
+//         response.data.forEach(item => {
+//           cards.appendChild(githubComponent(item))
+//         })
+//       })     
